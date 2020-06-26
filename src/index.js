@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
-import Scene1 from './assets/js/scenes/Scene1';
+import Game from './assets/js/scenes/Game';
+import Boot from './assets/js/scenes/Boot';
+import UI from './assets/js/scenes/UI';
 
 const config = {
   type: Phaser.AUTO,
@@ -13,7 +15,7 @@ const config = {
       gravity: { y: 0 },
     },
   },
-  scene: [Scene1],
+  scene: [Boot, Game, UI],
 };
 
 const game = new Phaser.Game(config);
