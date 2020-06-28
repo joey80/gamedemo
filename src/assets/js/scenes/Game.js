@@ -13,16 +13,16 @@ class Game extends Phaser.Scene {
   }
 
   create() {
+    this.createMap();
     this.createAudio();
     this.createPlayer();
     this.createChest();
-    this.createWalls();
     this.createInput();
     this.addCollisions();
   }
 
   addCollisions() {
-    this.physics.add.collider(this.player, this.wall);
+    this.physics.add.collider(this.player, this.blockedLayer);
     this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
   }
 
@@ -49,13 +49,24 @@ class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
-  createPlayer() {
-    this.player = new Player(this, 32, 32, 'characters', 0);
+  createMap() {
+    this.map = this.make.tilemap({ key: 'map' });
+    this.tiles = this.map.addTilesetImage('background', 'background', 32, 32, 1, 2);
+    this.backgroundLayer = this.map.createStaticLayer('background', this.tiles, 0, 0);
+    this.blockedLayer = this.map.createStaticLayer('blocked', this.tiles, 0, 0);
+    this.backgroundLayer.setScale(2);
+    this.blockedLayer.setScale(2);
+    this.blockedLayer.setCollisionByExclusion([-1]);
+
+    // update world bounds
+    this.physics.world.bounds.width = this.map.widthInPixels * 2;
+    this.physics.world.bounds.height = this.map.heightInPixels * 2;
+    // limit camera to world bounds
+    this.cameras.main.setBounds(0, 0, this.map.widthInPixels * 2, this.map.heightInPixels * 2);
   }
 
-  createWalls() {
-    this.wall = this.physics.add.image(500, 100, 'button1');
-    this.wall.setImmovable();
+  createPlayer() {
+    this.player = new Player(this, 224, 224, 'characters', 0);
   }
 
   spawnChest(elm) {
