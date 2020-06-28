@@ -4,7 +4,7 @@ import Boot from './assets/js/scenes/Boot';
 import UI from './assets/js/scenes/UI';
 import Title from './assets/js/scenes/Title';
 
-const config = {
+export const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
   width: 1280,

@@ -32,7 +32,7 @@ class Game extends Phaser.Scene {
     this.events.emit('updateScore', this.score);
     // chest.destroy();
     chest.makeInactive();
-    this.time.delayedCall(1000, this.spawnChest, [getRandXY(this)], this);
+    this.time.delayedCall(1000, this.spawnChest, [getRandXY()], this);
   }
 
   createAudio() {
@@ -41,7 +41,7 @@ class Game extends Phaser.Scene {
 
   createChest() {
     this.chests = this.physics.add.group();
-    this.chestPositions = [getRandXY(this), getRandXY(this), getRandXY(this)];
+    this.chestPositions = [getRandXY(), getRandXY(), getRandXY()];
     this.chestPositions.map((elm) => this.spawnChest(elm));
   }
 
