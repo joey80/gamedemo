@@ -2,6 +2,7 @@ import Player from '../classes/Player';
 import Chest from '../classes/Chest';
 import Map from '../classes/Map';
 import { getRandXY } from '../lib/util';
+import GameManager from '../classes/game_manager/GameManager';
 
 class Game extends Phaser.Scene {
   constructor() {
@@ -20,6 +21,7 @@ class Game extends Phaser.Scene {
     this.createChest();
     this.createInput();
     this.addCollisions();
+    this.createGameManager();
   }
 
   addCollisions() {
@@ -44,6 +46,11 @@ class Game extends Phaser.Scene {
     this.chests = this.physics.add.group();
     this.chestPositions = [getRandXY(), getRandXY(), getRandXY()];
     this.chestPositions.map((elm) => this.spawnChest(elm));
+  }
+
+  createGameManager() {
+    this.gameManager = new GameManager(this, this.map.map.objects);
+    this.gameManager.setup();
   }
 
   createInput() {
