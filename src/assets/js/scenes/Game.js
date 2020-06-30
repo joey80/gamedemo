@@ -17,10 +17,8 @@ class Game extends Phaser.Scene {
   create() {
     this.createMap();
     this.createAudio();
-    this.createPlayer();
     this.createChest();
     this.createInput();
-    this.addCollisions();
     this.createGameManager();
   }
 
@@ -49,6 +47,11 @@ class Game extends Phaser.Scene {
   }
 
   createGameManager() {
+    this.events.on('spawnPlayer', (location) => {
+      this.createPlayer(location);
+      this.addCollisions();
+    });
+
     this.gameManager = new GameManager(this, this.map.map.objects);
     this.gameManager.setup();
   }
@@ -61,8 +64,8 @@ class Game extends Phaser.Scene {
     this.map = new Map(this, 'map', 'background', 'background', 'blocked');
   }
 
-  createPlayer() {
-    this.player = new Player(this, 224, 224, 'characters', 0);
+  createPlayer(arr) {
+    this.player = new Player(this, arr[0] * 2, arr[1] * 2, 'characters', 0);
   }
 
   spawnChest(elm) {
@@ -77,7 +80,7 @@ class Game extends Phaser.Scene {
   }
 
   update() {
-    this.player.update(this.cursors);
+    if (this.player) this.player.update(this.cursors);
   }
 }
 
