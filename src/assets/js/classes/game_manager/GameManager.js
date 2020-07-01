@@ -1,3 +1,4 @@
+import Spawner from '../game_manager/Spawner';
 import { getRandomInt } from '../../lib/util';
 
 class GameManager {
@@ -20,6 +21,12 @@ class GameManager {
     this.spawnPlayer();
   }
 
+  addChest(id, chest) {
+    this.chests[id] = chest;
+  }
+
+  deleteChest() {}
+
   parseMapData() {
     this.mapData.map((elm) => {
       switch (elm.name) {
@@ -40,7 +47,25 @@ class GameManager {
 
   setupEventListeners() {}
 
-  setupSpawners() {}
+  setupSpawners() {
+    for (const key of Object.keys(this.chestLocations)) {
+      const config = {
+        spawnInterval: 3000,
+        limit: 3,
+        spawnerType: 'CHEST',
+        id: `chest-${key}`,
+      };
+
+      const spawner = new Spawner(
+        config,
+        this.chestLocations[key],
+        this.addChest.bind(this),
+        this.deleteChest.bind(this)
+      );
+
+      this.spawners[spawner.id] = spawner;
+    }
+  }
 
   spawnPlayer() {
     const location = this.playerLocations[getRandomInt(this.playerLocations.length)];
