@@ -16,6 +16,8 @@ export const config = {
       gravity: { y: 0 },
     },
   },
+  pixelArt: true,
+  roundPixels: true,
   scene: [Boot, Title, Game, UI],
 };
 

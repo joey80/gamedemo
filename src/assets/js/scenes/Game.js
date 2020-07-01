@@ -1,6 +1,8 @@
 import Player from '../classes/Player';
 import Chest from '../classes/Chest';
+import Map from '../classes/Map';
 import { getRandXY } from '../lib/util';
+import GameManager from '../classes/game_manager/GameManager';
 
 class Game extends Phaser.Scene {
   constructor() {
@@ -13,16 +15,15 @@ class Game extends Phaser.Scene {
   }
 
   create() {
+    this.createMap();
     this.createAudio();
-    this.createPlayer();
     this.createChest();
-    this.createWalls();
     this.createInput();
-    this.addCollisions();
+    this.createGameManager();
   }
 
   addCollisions() {
-    this.physics.add.collider(this.player, this.wall);
+    this.physics.add.collider(this.player, this.map.blockedLayer);
     this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
   }
 
@@ -45,17 +46,26 @@ class Game extends Phaser.Scene {
     this.chestPositions.map((elm) => this.spawnChest(elm));
   }
 
+  createGameManager() {
+    this.events.on('spawnPlayer', (location) => {
+      this.createPlayer(location);
+      this.addCollisions();
+    });
+
+    this.gameManager = new GameManager(this, this.map.map.objects);
+    this.gameManager.setup();
+  }
+
   createInput() {
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
-  createPlayer() {
-    this.player = new Player(this, 32, 32, 'characters', 0);
+  createMap() {
+    this.map = new Map(this, 'map', 'background', 'background', 'blocked');
   }
 
-  createWalls() {
-    this.wall = this.physics.add.image(500, 100, 'button1');
-    this.wall.setImmovable();
+  createPlayer(arr) {
+    this.player = new Player(this, arr[0] * 2, arr[1] * 2, 'characters', 0);
   }
 
   spawnChest(elm) {
@@ -70,7 +80,7 @@ class Game extends Phaser.Scene {
   }
 
   update() {
-    this.player.update(this.cursors);
+    if (this.player) this.player.update(this.cursors);
   }
 }
 

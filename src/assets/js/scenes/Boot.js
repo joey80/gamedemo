@@ -3,6 +3,7 @@ import Button2 from '../../images/ui/blue_button02.png';
 import Items from '../../images/items.png';
 import Characters from '../../images/characters.png';
 import GoldSound from '../../audio/Pickup.wav';
+import BackgroundExtruded from '../../images/background-extruded.png';
 
 class Boot extends Phaser.Scene {
   constructor() {
@@ -13,11 +14,17 @@ class Boot extends Phaser.Scene {
     this.loadImages();
     this.loadSpriteSheets();
     this.loadAudio();
+    this.loadTileMap();
+  }
+
+  loadAudio() {
+    this.load.audio('goldSound', GoldSound);
   }
 
   loadImages() {
     this.load.image('button1', Button1);
     this.load.image('button2', Button2);
+    this.load.image('background', BackgroundExtruded);
   }
 
   loadSpriteSheets() {
@@ -25,8 +32,8 @@ class Boot extends Phaser.Scene {
     this.load.spritesheet('characters', Characters, { frameWidth: 32, frameHeight: 32 });
   }
 
-  loadAudio() {
-    this.load.audio('goldSound', GoldSound);
+  loadTileMap() {
+    this.load.tilemapTiledJSON('map', 'src/assets/level/large_level.json');
   }
 
   create() {

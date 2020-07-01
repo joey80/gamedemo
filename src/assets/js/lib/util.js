@@ -6,17 +6,20 @@ import { config } from '../../../index';
 //   return [randoX, randoY];
 // }
 
+export const getRandomInt = (max) => {
+  return Math.floor(Math.random() * max);
+};
+
+export const getRandomIntFromRange = (min = 0, max) => {
+  const finalMin = Math.ceil(min);
+  const finalMax = Math.floor(max);
+  return Math.floor(Math.random() * (finalMax - finalMin + 1)) + finalMin;
+};
+
 export function getRandXY() {
   const { height, width } = config;
   const offset = 100;
-
-  const getRandomInt = (min, max) => {
-    const finalMin = Math.ceil(min);
-    const finalMax = Math.floor(max);
-    return Math.floor(Math.random() * (finalMax - finalMin + 1)) + finalMin;
-  };
-
-  const x = getRandomInt(offset, width - offset);
-  const y = getRandomInt(offset, height - offset);
+  const x = getRandomIntFromRange(offset, width - offset);
+  const y = getRandomIntFromRange(offset, height - offset);
   return [x, y];
 }
