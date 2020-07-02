@@ -17,7 +17,7 @@ class Game extends Phaser.Scene {
   create() {
     this.createMap();
     this.createAudio();
-    this.createChest();
+    this.createGroups();
     this.createInput();
     this.createGameManager();
   }
@@ -28,27 +28,31 @@ class Game extends Phaser.Scene {
   }
 
   collectChest(player, chest) {
+    const { coins, id } = chest;
+
     this.goldPickupAudio.play();
-    this.score += chest.coins;
+    this.score += coins;
     this.events.emit('updateScore', this.score);
-    // chest.destroy();
     chest.makeInactive();
-    this.time.delayedCall(1000, this.spawnChest, [getRandXY()], this);
+    this.events.emit('pickUpChest', id);
   }
 
   createAudio() {
     this.goldPickupAudio = this.sound.add('goldSound');
   }
 
-  createChest() {
+  createGroups() {
     this.chests = this.physics.add.group();
-    this.chestPositions = [getRandXY(), getRandXY(), getRandXY()];
-    this.chestPositions.map((elm) => this.spawnChest(elm));
   }
 
   createGameManager() {
     this.events.on('spawnPlayer', (location) => {
       this.createPlayer(location);
+      this.addCollisions();
+    });
+
+    this.events.on('chestSpawned', (chest) => {
+      this.spawnChest(chest);
       this.addCollisions();
     });
 
@@ -68,13 +72,17 @@ class Game extends Phaser.Scene {
     this.player = new Player(this, arr[0] * 2, arr[1] * 2, 'characters', 0);
   }
 
-  spawnChest(elm) {
+  spawnChest(chestObject) {
+    const { x, y, gold, id } = chestObject;
     let chest = this.chests.getFirstDead();
+
     if (chest) {
-      chest.setPosition(elm[0], elm[1]);
+      chest.coins = gold;
+      chest.id = id;
+      chest.setPosition(x * 2, y * 2);
       chest.makeActive();
     } else {
-      chest = new Chest(this, elm[0], elm[1], 'items', 0);
+      chest = new Chest(this, x * 2, y * 2, 'items', 0, gold, id);
       this.chests.add(chest);
     }
   }
