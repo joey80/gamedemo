@@ -1,5 +1,6 @@
 import ChestModel from './ChestModel';
-import { getRandomInt } from '../../lib/util';
+import { getRandomInt, getRandomIntFromRange } from '../../lib/util';
+import { SpawnerType } from './utils';
 
 class Spawner {
   constructor(config, spawnLocations, addObject, deleteObject) {
@@ -24,7 +25,10 @@ class Spawner {
     return location;
   }
 
-  removeObject() {}
+  removeObject(id) {
+    this.objectsCreated = this.objectsCreated.filter((obj) => obj.id !== id);
+    this.deleteObject(id);
+  }
 
   start() {
     this.interval = setInterval(() => {
@@ -33,14 +37,14 @@ class Spawner {
   }
 
   spawnObject() {
-    if (this.spawnerType === 'CHEST') {
+    if (this.spawnerType === SpawnerType.CHEST) {
       this.spawnChest();
     }
   }
 
   spawnChest() {
     const location = this.pickRandomLocation();
-    const chest = new ChestModel(location[0], location[1], 10, this.id);
+    const chest = new ChestModel(location[0], location[1], getRandomIntFromRange(10, 20), this.id);
     this.objectsCreated.push(chest);
     this.addObject(chest.id, chest);
   }
