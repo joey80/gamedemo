@@ -2,6 +2,7 @@ import Button1 from '../../images/ui/blue_button01.png';
 import Button2 from '../../images/ui/blue_button02.png';
 import Items from '../../images/items.png';
 import Characters from '../../images/characters.png';
+import Monsters from '../../images/monsters.png';
 import GoldSound from '../../audio/Pickup.wav';
 import BackgroundExtruded from '../../images/background-extruded.png';
 
@@ -30,6 +31,7 @@ class Boot extends Phaser.Scene {
   loadSpriteSheets() {
     this.load.spritesheet('items', Items, { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('characters', Characters, { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('monsters', Monsters, { frameWidth: 32, frameHeight: 32 });
   }
 
   loadTileMap() {

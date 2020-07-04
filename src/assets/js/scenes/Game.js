@@ -1,7 +1,7 @@
 import Player from '../classes/Player';
 import Chest from '../classes/Chest';
 import Map from '../classes/Map';
-import { getRandXY } from '../lib/util';
+import Monster from '../classes/Monster';
 import GameManager from '../classes/game_manager/GameManager';
 
 class Game extends Phaser.Scene {
@@ -43,6 +43,7 @@ class Game extends Phaser.Scene {
 
   createGroups() {
     this.chests = this.physics.add.group();
+    this.monsters = this.physics.add.group();
   }
 
   createGameManager() {
@@ -53,7 +54,10 @@ class Game extends Phaser.Scene {
 
     this.events.on('chestSpawned', (chest) => {
       this.spawnChest(chest);
-      this.addCollisions();
+    });
+
+    this.events.on('monsterSpawned', (monster) => {
+      this.spawnMonster(monster);
     });
 
     this.gameManager = new GameManager(this, this.map.map.objects);
@@ -84,6 +88,23 @@ class Game extends Phaser.Scene {
     } else {
       chest = new Chest(this, x * 2, y * 2, 'items', 0, gold, id);
       this.chests.add(chest);
+    }
+  }
+
+  spawnMonster(monsterObject) {
+    const { x, y, frame, gold, health, id, maxHealth } = monsterObject;
+    let monster = this.monsters.getFirstDead();
+
+    if (monster) {
+      monster.id = id;
+      monster.health = health;
+      monster.maxHealth = maxHealth;
+      monster.setPosition(x * 2, y * 2);
+      monster.setTexture('monsters', frame);
+      monster.makeActive();
+    } else {
+      monster = new Monster(this, x * 2, y * 2, 'monsters', frame, id, health, maxHealth);
+      this.monsters.add(monster);
     }
   }
 
